@@ -4,7 +4,7 @@ var BigNumber = require('bignumber.js');
 var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider('http://127.0.0.1:8545'));
 var runRewardsCalc = function() {
-	var LATEST_BLOCK = wait.for(web3.eth.getBlock,'latest').number;//web3.eth.getBlock('latest').number;
+	var LATEST_BLOCK = wait.for(web3.eth.getBlock,'latest').number;
 	var STARTING_BLOCK = LATEST_BLOCK - 6008; //60*24*(60/14.38)=6008 (1 day)
 	console.log("LATEST BLOCK", LATEST_BLOCK);
 	console.log("STARTING BLOCK", STARTING_BLOCK);
@@ -12,14 +12,14 @@ var runRewardsCalc = function() {
 	var txReward = new BigNumber(0);
 	var blockReward = new BigNumber(0);
 	for (var i = STARTING_BLOCK; i < LATEST_BLOCK; i++) {
-		var blockInfo = wait.for(web3.eth.getBlock, i);//web3.eth.getBlock(i);
+		var blockInfo = wait.for(web3.eth.getBlock, i);
 		console.log(LATEST_BLOCK - i + " PROCESSING BLOCK", blockInfo.number);
 		var uncleHashes = blockInfo.uncles;
 		var tBlockReward = new BigNumber(5 + (5 * 0.03125 * uncleHashes.length));
 		blockReward = blockReward.plus(tBlockReward);
 		var tUncleReward = new BigNumber(0);
 		for (var j = 0; j < uncleHashes.length; j++) {
-			var uncleInfo = wait.for(web3.eth.getUncle,blockInfo.hash,j);//web3.eth.getUncle(blockInfo.hash, j);
+			var uncleInfo = wait.for(web3.eth.getUncle,blockInfo.hash,j);
 			tUncleReward = tUncleReward.plus((uncleInfo.number + 8 - blockInfo.number) * 5 / 8);
 		}
 		uncleReward = uncleReward.plus(tUncleReward);
